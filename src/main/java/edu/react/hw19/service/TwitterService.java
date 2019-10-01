@@ -16,7 +16,20 @@ public class TwitterService {
 
     private Configuration configuration;
 
-    public Flux<Tweet> findTweets(List<String> hashtags) {
+    Flux<Tweet> findByCreatedAt(String data) {
+
+        return Flux.create(sink -> {
+            TwitterStream twitterStream = new TwitterStreamFactory(configuration).getInstance();
+            twitterStream.onStatus(status -> sink.next(Tweet.fromStatus(status)));
+            twitterStream.onException(sink::error);
+            twitterStream.filter(data);
+            sink.onCancel(twitterStream::shutdown);
+        });
+
+    }
+
+    Flux<Tweet> findTweets(List<String> hashtags) {
+
         return Flux.create(sink -> {
             TwitterStream twitterStream = new TwitterStreamFactory(configuration).getInstance();
             twitterStream.onStatus(status -> sink.next(Tweet.fromStatus(status)));

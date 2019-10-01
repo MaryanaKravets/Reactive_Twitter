@@ -1,7 +1,6 @@
 package edu.react.hw19.service;
 
 import edu.react.hw19.domain.Tweet;
-import edu.react.hw19.repo.TweetRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -15,20 +14,18 @@ import java.util.Collections;
 @AllArgsConstructor
 public class TweetHandler {
 
-    private TweetService service;
-
+    private TwitterService twitterService;
 
     public Mono<ServerResponse> findByCreatedAt(ServerRequest request) {
         return ServerResponse
                 .ok()
-                .body(service.findByCreatedAt(request.pathVariable("date")), Tweet.class);
+                .body(twitterService.findByCreatedAt(request.pathVariable("date")), Tweet.class);
     }
-
 
     public Mono<ServerResponse> findTweets(ServerRequest request) {
         return ServerResponse
                 .ok()
                 .contentType(MediaType.APPLICATION_STREAM_JSON)
-                .body(service.findTweets(),Tweet.class);
+                .body(twitterService.findTweets(Collections.singletonList("#spring")), Tweet.class);
     }
 }

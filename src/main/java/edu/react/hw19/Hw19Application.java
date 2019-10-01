@@ -12,22 +12,14 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@SpringBootApplication@EnableConfigurationProperties(TwitterConfig.class)
+@SpringBootApplication
+@EnableConfigurationProperties(TwitterConfig.class)
 
 public class Hw19Application {
 
-//    @Bean
-//     WebClient client(){//@Value("${service-url:http://localhost:8080/}") String url) {
-//
-////        return WebClient.builder().baseUrl(url)
-////                .build();
-//        return WebClient.create("http://localhost:8080");
-//    }
-
-    @Bean
-   static ApplicationRunner run() {
+    static void run() {
+        Runnable runnable = () -> {
             WebClient client = WebClient.create("http://localhost:8080");
-        return args ->
             client
                     .get()
                     .uri("/tweets")
@@ -35,10 +27,12 @@ public class Hw19Application {
                     .bodyToFlux(Tweet.class)
                     .map(Tweet::toString)
                     .subscribe(System.out::println);
+        };
+        new Thread(runnable).start();
     }
-
 
     public static void main(String[] args) {
         SpringApplication.run(Hw19Application.class, args);
+        run();
     }
 }

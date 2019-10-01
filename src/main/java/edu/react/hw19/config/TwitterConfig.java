@@ -21,9 +21,4 @@ public class TwitterConfig {
 
     @Value("${twitter.access-token-secret}")
     private String accessTokenSecret;
-
-//    @Bean
-//    TwitterTemplate getTwtTemplate(){
-//        return new TwitterTemplate(consumerKey,consumerSecret,accessToken,accessTokenSecret);
-//    }
 }
